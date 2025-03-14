@@ -10,8 +10,8 @@ Program to calculate Matrix Multiplication of two Matrices.
 #define WIDTH_Y  3
 
 __global__ void matrix_mul(float *X, float *Y, float *Z) {
-  float pvalue = 0;
 
+  float sum = 0.0f;
   // find Row and Column corresponding to a data element for each thread
   int row = blockIdx.y * blockDim.y + threadIdx.y;
   int col = blockIdx.x * blockDim.x + threadIdx.x;
@@ -19,7 +19,6 @@ __global__ void matrix_mul(float *X, float *Y, float *Z) {
   // calculate dot product of Row of First Matrix
   //  and Column of Second Matrix
   if (row < HEIGHT_X && col < WIDTH_Y) {
-      float sum = 0.0f;
       for (int i = 0; i < WIDTH_X; ++i) {
         float m = X[row * WIDTH_X + i];
         float n = Y[col + WIDTH_Y * i];
@@ -88,7 +87,7 @@ int main() {
   hipEventCreate(&stop);
   hipEventRecord(start, 0);
 
-  matrix_mul<<<gridsize, blocksize>>>(X_d, Y_d, Z_d);
+  matrix_mul<<<gridDim, blockDim>>>(X_d, Y_d, Z_d);
 
   hipEventRecord(stop, 0);
   hipEventSynchronize(stop);
@@ -103,14 +102,14 @@ int main() {
   fprintf(f, "Array A was---\n");
   for (i = 0; i < HEIGHT_X; i++) {
     for (j = 0; j < WIDTH_X; j++)
-      fprintf(f, "%f ", a[i * WIDTH_X + j]);
+      fprintf(f, "%f ", X_h[i * WIDTH_X + j]);
     fprintf(f, "\n");
   }
 
   fprintf(f, "\nArray B was---\n");
   for (i = 0; i < WIDTH_X; i++) {
     for (j = 0; j < WIDTH_Y; j++)
-      fprintf(f, "%f ", b[i * WIDTH_Y + j]);
+      fprintf(f, "%f ", Y_h[i * WIDTH_Y + j]);
       fprintf(f, "\n");
   }
 
@@ -118,7 +117,7 @@ int main() {
   for (i = 0; i < HEIGHT_X; i++)
   {
     for (j = 0; j < WIDTH_Y; j++)
-    fprintf(f, "%f ", c[i * WIDTH_Y + j]);
+    fprintf(f, "%f ", Z_h[i * WIDTH_Y + j]);
     fprintf(f, "\n");
   }
     
@@ -127,12 +126,12 @@ int main() {
     fprintf(f, "\n\nTime taken is %f (ms)\n", time);
     fclose(f);
 
-    hipFree(ad);
-    hipFree(bd);
-    hipFree(cd);
-    free(a);
-    free(b);
-    free(c);
+    hipFree(X_d);
+    hipFree(Y_d);
+    hipFree(Z_d);
+    free(X_h);
+    free(Y_h);
+    free(Z_h);
 
     return 0;
   }
