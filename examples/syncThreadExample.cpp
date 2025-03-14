@@ -3,7 +3,7 @@
 
 #define N 20 // Vector size
 
-__global__ void reverse_array(float *a) {
+__global__ void kernel(float *a) {
   __shared__ float sData[N];
 
   int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -32,7 +32,7 @@ int main() {
   hipMemcpy(d_A, h_A, N * sizeof(float), hipMemcpyHostToDevice);
 
   // Launch HIP Kernel
-  reverse_array<<<1, N>>>(d_A);
+  kernel<<<4, 5>>>(d_A);
 
   // Copy result from Device to Host
   hipMemcpy(h_B, d_A, N * sizeof(float), hipMemcpyDeviceToHost);
@@ -42,7 +42,7 @@ int main() {
   for(int i=0; i<N; i++)
     std::cout << h_A[i] << " ";
   std::cout << std::endl;
-  std::cout << "Reverse Array:" << std::endl;
+  std::cout << "Output Array:" << std::endl;
 
   for(int i=0; i<N; i++)
     std::cout << h_B[i] << " ";

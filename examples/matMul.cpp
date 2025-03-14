@@ -51,13 +51,13 @@ int main() {
 
   for (i = 0; i < WIDTH_X; i++) {
     for (j = 0; j < HEIGHT_X; j++) {
-      X_h[j * WIDTH_X + i] = 1.0; 
+      X_h[j * WIDTH_X + i] = 5.0*i; 
     }
   }
 
   for (i = 0; i < WIDTH_Y; i++) {
     for (j = 0; j < WIDTH_X; j++) {
-      Y_h[j * WIDTH_Y + i] = 1.0;
+      Y_h[j * WIDTH_Y + i] = 4.0*j;
     }
   }
   // allocate device memory
