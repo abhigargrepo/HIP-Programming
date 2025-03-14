@@ -15,4 +15,4 @@ Multiplication of A and B gives C----
 4.000000 4.000000 4.000000 
 
 
-Time taken is 0.355933 (ms)
+Time taken is 0.433009 (ms)

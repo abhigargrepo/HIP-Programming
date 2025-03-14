@@ -62,12 +62,8 @@ int main() {
   }
   // allocate device memory
   hipMalloc(&X_d, sizeX);
-  // printf("\nAfter hipMalloc for
-  // ad\n%s\n",hipGetErrorString(hipGetLastError()));
   hipMalloc(&Y_d, sizeY);
-  // printf("\nAfter hipMalloc bd\n%s\n",hipGetErrorString(hipGetLastError()));
   hipMalloc(&Z_d, sizeZ);
-  // printf("\nAfter hipMalloc cd\n%s\n",hipGetErrorString(hipGetLastError()));
 
   // copy value from host to device
   hipMemcpy(X_d, X_h, sizeX, hipMemcpyHostToDevice);
@@ -77,7 +73,6 @@ int main() {
 
   // calculate execution configuration
   dim3 blockDim(16, 16);        // each block contains 16 * 16 (=256) threads
-  // dim3 gridsize((N+16-1) / 16, (N+15) / 16); // creating just sufficient no of blocks
   dim3 gridDim((WIDTH_Y + blockDim.x - 1) / blockDim.x, (HEIGHT_X + blockDim.y - 1) / blockDim.y);
   
   // GPU timer code
@@ -91,8 +86,7 @@ int main() {
 
   hipEventRecord(stop, 0);
   hipEventSynchronize(stop);
-  hipEventElapsedTime(&time, start,
-                      stop); // time taken in kernel call calculated
+  hipEventElapsedTime(&time, start, stop); // time taken in kernel call calculated
   hipEventDestroy(start);
   hipEventDestroy(stop);
 
